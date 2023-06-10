@@ -1,4 +1,5 @@
 .gitignore
+
 *.txt
 .idea/*
 Makefile
@@ -36,3 +37,4 @@ Makefile
 *.exe
 *.out
 *.app
+main

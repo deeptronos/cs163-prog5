@@ -17,12 +17,20 @@ void vertex::display() {
 	}
 }
 
-bool vertex::addEdge(const vertex& to_connect) throw(AlreadyConnectedException){
-	edge_node e(this, to_connect);
+//bool vertex::addEdge(const vertex& to_connect) throw(AlreadyConnectedException){
+//	edge_node e(this, to_connect);
+//
+//	if(std::find(edge_list.begin(), edge_list.end(), ) != edge_list.end()){
+//
+//	}
+//}
 
-	if(std::find(edge_list.begin(), edge_list.end(), ) != edge_list.end()){
+bool vertex::connectTo(vertex& target) throw (NotFoundException){
+	std::pair<vertex& ,vertex&> e_p = std::make_pair<vertex&, vertex&> (*this, target);
 
-	}
+	edge_node e(e_p);
+
+	edge_list.push_back(e);
 }
 
 bool vertex::operator==(const vertex& rhs) const{
@@ -47,19 +55,15 @@ bool edge_node::operator==(const edge_node& rhs) const{
 // my_graph Implementation
 // -----------------------
 
-// ---------------------------
-// Constructors and Destructor
-// ---------------------------
+// --------------
+// Public Methods
+// --------------
 
-//my_graph::my_graph() {} // TODO
-
-my_graph::my_graph(int size_) {} // TODO
-
-my_graph::my_graph(std::vector<vertex_data_t> data_vec_){} // TODO
-
-//my_graph::~my_graph() {} // TODO
-
-
+my_graph::my_graph(std::vector<vertex_data_t> data_vec_){
+	for(auto d: data_vec_){
+		adjacency_list.push_back(vertex(d));
+	}
+}
 
 void my_graph::display() const {
 	std::cout << "Displaying graph in order of adjacency_list entries:" << std::endl;
@@ -84,9 +88,75 @@ bool my_graph::removeVertex(vertex_data_t d_){
 	adjacency_list.erase(remove(adjacency_list.begin(), adjacency_list.end(), v), adjacency_list.end()); // TODO what if vertices of value d_ have vertices of other values between them in the adjacency_list vector?
 }
 
-bool my_graph::addEdge(vertex_data_t& start_, vertex_data_t& end_) {
-	vertex v_start = getVertexByData(start_);
-	vertex v_end = getVertexByData(end_);
+bool my_graph::addEdge(vertex_data_t& start_, vertex_data_t& end_) throw(NotFoundException) {
+	vertex * v_start, * v_end;
+	try {
+		v_start = &getVertexByData(start_);
+		v_end = &getVertexByData(end_);
+	}catch(NotFoundException e){ // One or more getVertexByData calls failed
+		cout << e.what() << endl; // should we cout from this method?
+		return false;
+	}
 
-	v_start.
+	v_start->connectTo(*v_end); // TODO ok?
+}
+bool my_graph::removeEdge(vertex_data_t & start_, vertex_data_t  & end_)throw(NotFoundException){
+	//Duplicate first 8 lines of addEdge
+	// do v_start->disconnectFrom(v_end);
+	return false;
+}
+
+// ------------------------
+// Public Traversal Methods
+// ------------------------
+void my_graph::depthFirstTraverse(vertex_data_t start, void (*visit)(vertex_data_t &)) {
+	if(adjacency_list.empty()) return;
+	vertex start_v = getVertexByData(start);
+	setAllVerticesUndiscovered();
+	recursive_DepthFirstTraverse(start_v, visit);
+}
+
+void my_graph::breadthFirstTraverse(vertex_data_t start, void (*visit)(vertex_data_t &)) {
+	if(adjacency_list.empty()) return;
+	vertex start_v = getVertexByData(start);
+	setAllVerticesUndiscovered();
+	// Create a queue q, to be passed by reference thru recursive BFT method
+	// add start_v to q
+	// Call recursive_BreadthFirstSearch(start_v, visit, &q);
+}
+
+// ---------------
+// Private Methods
+// ---------------
+
+vertex& my_graph::getVertexByData(vertex_data_t &v) throw(NotFoundException) {
+	// move thru adjacency_list from beginning until a vertex with data == v
+	// if reach end of adjacency_list, throw NotFoundException(v + "not found in graph!");
+	// otherwise, return matching vertex&
+}
+
+void my_graph::setAllVerticesUndiscovered() {
+	// from beginning to end of adjacency_list:
+		// set each vertex.traversal_discovered_helper to false
+}
+
+// ----------------------------------
+// Recursive Traversal Helper Methods
+// ----------------------------------
+void my_graph::recursive_BreadthFirstTraverse(vertex & v_, void (*visit)(vertex_data_t &), queue<vertex>& queue_) { // TODO I think this stub may not result in a BFT...
+	// pop from queue
+	// If popped vertex.traversal_discovered_helper is true, return
+
+	// call visit on popped vertex
+	// mark popped vertex's flag as visited
+	// add vertices from popped vertex's edges to queue
+
+	// recurse on vertices from popped vertex's edges
+}
+
+void my_graph::recursive_DepthFirstTraverse(vertex &v_, void (*visit)(vertex_data_t &)) {
+	// mark v_'s flag as visited
+	// for each vertex in edge_list:
+		// if vertex's discovered flag is true, do nothing
+		// else recurse on vertex
 }
