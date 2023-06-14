@@ -29,9 +29,9 @@ public:
 
 };
 
-class AlreadyConnectedException: public logic_error{
+class ConnectionException: public logic_error{
 public:
-	AlreadyConnectedException(const string& message="") : logic_error("Already connected: " + message){
+	ConnectionException(const string& message="") : logic_error("An exception was encountered while dealing with a connection: " + message){
 	}
 };
 

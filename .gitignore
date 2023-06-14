@@ -1,7 +1,8 @@
 *.txt
 .idea/*
 Makefile
-
+main
+*.dSYM/*
 # Prerequisites
 *.d
 # Compiled Object files
@@ -29,3 +30,4 @@ Makefile
 *.out
 *.app
 main
+main.dSYM/Contents/Info.plist
