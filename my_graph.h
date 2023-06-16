@@ -10,8 +10,6 @@
 #include <utility>
 #include <memory>
 
-#include <queue> // TODO OK? // For my_graph::recursive_BreadthFirstTraverse
-
 #include "my_exceptions.h"
 
 // TODO:
@@ -19,6 +17,7 @@
 	//      If not, just use a vector and enforce its size = 2:P
 
 using vertex_data_t = std::string;
+using namespace std;
 
 struct vertex{ // TODO since my_graph's adjacency_list is a std::vector<vertex>, will resizing that & invoking the vertex copy constructor cause issues here?
 	vertex_data_t * data; // TODO Should this be a * or not?
@@ -27,12 +26,16 @@ struct vertex{ // TODO since my_graph's adjacency_list is a std::vector<vertex>,
 
 	bool discovered; // Traversal helper flag
 
+	friend ostream&  operator<<(ostream& os, const vertex& v);
+
 };
 
 struct node{
-	int to;
+	int to; //
 
 	node * next;
+
+	friend ostream&  operator<<(ostream& os, const vertex& v);
 };
 
 class my_graph {
@@ -54,7 +57,7 @@ public:
 	void display() const;
 
 	bool insert_vertex(vertex_data_t d_) throw(PreconditionViolatedException);
-	bool insert_connection(vertex_data_t source_, vertex_data_t target_);
+	bool insert_connection(vertex_data_t source_, vertex_data_t target_) throw(ConnectionException);
 
 	void depthFirstTraverse(vertex_data_t start, void visit(vertex*)); // Start a  DFT at the vertex with data == start
 
