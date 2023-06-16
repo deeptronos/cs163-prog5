@@ -87,8 +87,8 @@ public:
 	bool removeEdge(vertex_data_t& start_, vertex_data_t& end_)throw(NotFoundException);
 
 
-	void breadthFirstTraverse(vertex_data_t start, void visit(vertex&)); // TODO // Start a  BFT at the vertex with data == start
-	void depthFirstTraverse(vertex_data_t start, void visit(vertex&)); // Start a  DFT at the vertex with data == start
+	void breadthFirstTraverse(vertex_data_t start, void visit(vertex*)); // TODO // Start a  BFT at the vertex with data == start
+	void depthFirstTraverse(vertex_data_t start, void visit(vertex*)); // Start a  DFT at the vertex with data == start
 
 private:
 	// ----
@@ -104,8 +104,8 @@ private:
 	// ----------------------------------
 	// Recursive Traversal Helper Methods
 	// ----------------------------------
-	void recursive_BreadthFirstTraverse(void (*visit)(vertex &), queue<vertex*>& queue_);
-	void recursive_DepthFirstTraverse(vertex & v_, void visit(vertex&));
+	void recursive_BreadthFirstTraverse(void (*visit)(vertex *), queue<vertex*>& queue_);
+	void recursive_DepthFirstTraverse(vertex & v_, void visit(vertex*));
 
 };
 

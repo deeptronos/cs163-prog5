@@ -88,23 +88,38 @@ bool my_graph::addVertex(vertex_data_t d_){ // Adds vertex at end of adjacency_l
 }
 
 bool my_graph::removeVertex(vertex_data_t d_){
-	const vertex& v = getVertexByData(d_);
-
-	// Remove edges from vertex:
-	for(auto e: v.edge_list){
-		removeEdge(e.edge.first.data, e.edge.second.data);
+	vertex * v;
+	try{
+		v = getVertexByData(d_);
+	}catch(NotFoundException e){
+		cout << e.what() << endl;
+		cout << "my_graph::removeVertex attempted to remove nonexistent vertex. Returning..." << endl;
+		return false;
 	}
 
-	adjacency_list.erase(remove(adjacency_list.begin(), adjacency_list.end(), v), adjacency_list.end()); //TODO does this not remove everything from v to end()? // TODO what if vertices of value d_ have vertices of other values between them in the adjacency_list vector?
+	// Remove edges from vertex:
+	for(auto e: v -> edge_list){
+		try{
+			removeEdge(e.edge.first.data, e.edge.second.data);
+		}catch(NotFoundException e){
+			cout << e.what() << endl;
+			cout << "my_graph::removeVertex attempted to remove nonexistent edge. Returning..." << endl;
+			return false;
+		}
+	}
+
+	adjacency_list.erase(remove(adjacency_list.begin(), adjacency_list.end(), *v), adjacency_list.end()); // TODO this may be trouble //TODO does this not remove everything from v to end()? // TODO what if vertices of value d_ have vertices of other values between them in the adjacency_list vector?
+	return true;
 }
 
 bool my_graph::addEdge(vertex_data_t& start_, vertex_data_t& end_) throw(NotFoundException) {
 	vertex * v_start, * v_end;
 	try {
-		v_start = &getVertexByData(start_);
-		v_end = &getVertexByData(end_);
+		v_start = getVertexByData(start_);
+		v_end = getVertexByData(end_);
 	}catch(NotFoundException e){ // One or more getVertexByData calls failed
 		cout << e.what() << endl; // should we cout from this method?
+		cout << "my_graph::addEdge had an issue creating an edge from vertices of data " << start_ << " to " << end_ <<". Returning..." << endl;
 		return false;
 	}
 
@@ -119,10 +134,11 @@ bool my_graph::addEdge(vertex_data_t& start_, vertex_data_t& end_) throw(NotFoun
 bool my_graph::removeEdge(vertex_data_t & start_, vertex_data_t  & end_)throw(NotFoundException){
 	vertex * v_start, * v_end;
 	try {
-		v_start = &getVertexByData(start_);
-		v_end = &getVertexByData(end_);
+		v_start = getVertexByData(start_);
+		v_end = getVertexByData(end_);
 	}catch(NotFoundException e){ // One or more getVertexByData calls failed
 		cout << e.what() << endl; // should we cout from this method?
+		cout << "my_graph::removeEdge had an issue removing an edge from vertices of data " << start_ << " to " << end_ <<". Returning..." << endl;
 		return false;
 	}
 	try{
@@ -137,23 +153,39 @@ bool my_graph::removeEdge(vertex_data_t & start_, vertex_data_t  & end_)throw(No
 // ------------------------
 // Public Traversal Methods
 // ------------------------
-void my_graph::depthFirstTraverse(vertex_data_t start, void (*visit)(vertex &)) {
+void my_graph::depthFirstTraverse(vertex_data_t start, void (*visit)(vertex *)) {
 	if(adjacency_list.empty()) return;
-	vertex start_v = getVertexByData(start);
+
+	vertex & start_v = getVertexByData(start) ;
+	try{
+		start_v = *getVertexByData(start);
+	} catch(NotFoundException e){
+		cout << e.what() << endl;
+		cout << "my_graph::depthFirstTraverse was given an invalid starting vertex. Returning...";
+		return;
+	}
+
 	setAllVerticesUndiscovered();
-	recursive_DepthFirstTraverse(start_v, visit);
+	recursive_DepthFirstTraverse(*start_v, visit);
 }
 
-void my_graph::breadthFirstTraverse(vertex_data_t start, void (*visit)(vertex &)) {
+void my_graph::breadthFirstTraverse(vertex_data_t start, void (*visit)(vertex *)) {
 	if(adjacency_list.empty()) return;
 	setAllVerticesUndiscovered();
 
-	vertex start_v = getVertexByData(start);
+	vertex * start_v;
+	try{
+		start_v = getVertexByData(start);
+	}catch(NotFoundException e){
+		cout << e.what() << endl;
+		cout << "my_graph::breadthFirstTraverse() attempted to visit non-existent vertex. Returning..." << endl;
+		return;
+	}
 
 	queue<vertex*> q;
 
-	q.push(&start_v);
-	start_v.discovered = true;
+	q.push(start_v);
+	start_v->discovered = true;
 
 //	recursive_BreadthFirstTraverse(start_v, visit, q);
 	recursive_BreadthFirstTraverse(visit, q);
@@ -163,12 +195,12 @@ void my_graph::breadthFirstTraverse(vertex_data_t start, void (*visit)(vertex &)
 // Private Methods
 // ---------------
 
-vertex& my_graph::getVertexByData(vertex_data_t &v) throw(NotFoundException) {
+vertex* my_graph::getVertexByData(vertex_data_t &v) throw(NotFoundException) {
 	// move thru adjacency_list from beginning until a vertex with data == v
 	// if reach end of adjacency_list, throw NotFoundException(v + "not found in graph!");
 	// otherwise, return matching vertex&
 	for(auto entry: adjacency_list){
-		if(entry.data == v) return entry;
+		if(entry.data == v) return &entry;
 	}
 	throw NotFoundException("my_graph::getVertexByData failed to find a vertex with data v.");
 }
@@ -185,7 +217,7 @@ void my_graph::setAllVerticesUndiscovered() {
 // Recursive Traversal Helper Methods
 // ----------------------------------
 //void my_graph::recursive_BreadthFirstTraverse(vertex & v_, void (*visit)(vertex_data_t &), queue<vertex>& queue_) { // TODO I think this stub may not result in a BFT...
-void my_graph::recursive_BreadthFirstTraverse(void (*visit)(vertex &), queue<vertex*>& queue_) {
+void my_graph::recursive_BreadthFirstTraverse(void (*visit)(vertex *), queue<vertex*>& queue_) {
 	// pop from queue
 	// If popped vertex.traversal_discovered_helper is true, return
 	// call visit on popped vertex
@@ -198,7 +230,7 @@ void my_graph::recursive_BreadthFirstTraverse(void (*visit)(vertex &), queue<ver
 	vertex* popped = queue_.front();
 	queue_.pop(); // TODO will we still have pos after this?
 
-	visit(*popped); // TODO should visit take vertex, not vertex_data?
+	visit(popped); // TODO should visit take vertex, not vertex_data?
 	for(edge_node& ve: popped->edge_list){
 		if(!ve.edge.second.discovered){ // TODO i'm a bit shaky on this. make sure that this is a reference to a vertex, not a copy of any type.
 			ve.edge.second.discovered = true;
@@ -209,13 +241,13 @@ void my_graph::recursive_BreadthFirstTraverse(void (*visit)(vertex &), queue<ver
 
 }
 
-void my_graph::recursive_DepthFirstTraverse(vertex &v_, void (*visit)(vertex &)) {
+void my_graph::recursive_DepthFirstTraverse(vertex &v_, void (*visit)(vertex *)) {
 	// mark v_'s flag as visited
 	// for each vertex in edge_list:
 		// if vertex's discovered flag is true, do nothing
 		// else recurse on vertex
 	v_.discovered = true;
-	visit(v_); // TODO should visit take vertex, not vertex_data?
+	visit(&v_); // TODO should visit take vertex, not vertex_data?
 	for(auto ve:v_.edge_list){
 		if(!ve.edge.second.discovered){
 			ve.edge.second.discovered = true;

@@ -1,2 +1,4 @@
 6/13/23:
 Next time, test implementation using main.cc and work out SIGABRT occurring with depthFirstTraverse wrapper thing.
+	- Ensure all thrown exceptions are caught
+	TODO "Use references wherever you can, and pointers wherever you must."

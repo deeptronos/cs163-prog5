@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-void my_visit(vertex& v){
-	v.display();
+void my_visit(vertex* v){
+	v->display();
 };
 
 int main(){
