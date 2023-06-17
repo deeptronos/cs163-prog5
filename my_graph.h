@@ -56,8 +56,8 @@ public:
 
 	void display() const;
 
-	bool insert_vertex(vertex_data_t d_) throw(PreconditionViolatedException);
-	bool insert_connection(vertex_data_t source_, vertex_data_t target_) throw(ConnectionException);
+	bool insertVertex(vertex_data_t d_) throw(PreconditionViolatedException);
+	bool insertConnection(vertex_data_t source_, vertex_data_t target_) throw(ConnectionException);
 
 	void depthFirstTraverse(vertex_data_t start, void visit(vertex*)); // Start a  DFT at the vertex with data == start
 
@@ -71,6 +71,7 @@ private:
 	// Private Methods
 	// ---------------
 	void setAllVerticesUndiscovered();
+
 
 	// Retrieve the vertex with data of target_. Returns its index in adjacency_list.
 	int getVertexIndexFromData(vertex_data_t& target_) throw(NotFoundException);

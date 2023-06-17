@@ -1,52 +1,77 @@
-#include "my_graph.h"
+//#include "my_graph.h"
+#include "testing_interface_graph.h"
 
 #include <iostream>
 
 
-void my_visit(vertex* v){
-	cout << *v << endl;
-}
+
 
 int main(){
+	testing_interface_graph tig;
+	bool run = true;
+	do{
+		run = tig.prompt_user();
+	} while (run); // TODO good preactice?
+
+	return 0;
+}
+
+int old_main(){
 	my_graph g;
 	g.display();
 
-	g.insert_vertex("Go camping");
+	g.insertVertex("Go camping");
 
-	g.insert_vertex("Pick your campsite");
-		g.insert_vertex("Yosemite");
-		g.insert_vertex("Arches");
-		g.insert_vertex("Mt. Rainier");
+	g.insertVertex("Pick your campsite");
+	g.insertVertex("Yosemite");
+	g.insertVertex("Arches");
+	g.insertVertex("Mt. Rainier");
 
-		g.insert_connection("Pick your campsite", "Yosemite");
-		g.insert_connection("Pick your campsite", "Arches");
-		g.insert_connection("Pick your campsite", "Mt. Rainier");
+	g.insertConnection("Pick your campsite", "Yosemite");
+	g.insertConnection("Pick your campsite", "Arches");
+	g.insertConnection("Pick your campsite", "Mt. Rainier");
 
-		g.insert_connection("Go camping", "Pick your campsite");
+	g.insertConnection("Go camping", "Pick your campsite");
 
-	g.insert_vertex("Figure out how you'll sleep");
-		g.insert_vertex("Rent or purchase a luxury trailer");
-		g.insert_vertex("In the dirt");
-		g.insert_vertex("In a tent");
-		g.insert_vertex("In your car");
+	g.insertVertex("Figure out how you'll sleep");
+	g.insertVertex("Rent or purchase a luxury trailer");
+	g.insertVertex("In the dirt");
+	g.insertVertex("In a tent");
+	g.insertVertex("In your car");
 
-		g.insert_connection("Figure out how you'll sleep", "Rent or purchase a luxury trailer");
-		g.insert_connection("Figure out how you'll sleep", "In the dirt");
-		g.insert_connection("Figure out how you'll sleep", "In a tent");
-		g.insert_connection("Figure out how you'll sleep", "In your car");
+	g.insertConnection("Figure out how you'll sleep", "Rent or purchase a luxury trailer");
+	g.insertConnection("Figure out how you'll sleep", "In the dirt");
+	g.insertConnection("Figure out how you'll sleep", "In a tent");
+	g.insertConnection("Figure out how you'll sleep", "In your car");
 
-		g.insert_connection("Go camping", "Figure out how you'll sleep");
+	g.insertConnection("Go camping", "Figure out how you'll sleep");
 
-	g.insert_vertex("Reserve your campsite before arriving");
-		g.insert_connection("Yosemite","Reserve your campsite before arriving");
-		g.insert_connection("Arches","Reserve your campsite before arriving");
-		g.insert_connection("Mt. Rainier", "Reserve your campsite before arriving");
-
-	g.insert_connection("Go camping", "Pick your campsite");
+	g.insertVertex("Reserve your campsite before arriving");
+	g.insertConnection("Yosemite", "Reserve your campsite before arriving");
+	g.insertConnection("Arches", "Reserve your campsite before arriving");
+	g.insertConnection("Mt. Rainier", "Reserve your campsite before arriving");
 
 
+
+	cout << endl << "Display(): " << endl;
 	g.display();
-	cout << endl << endl << endl << "Depth first traversal:" << endl;
+
+	cout << endl << "Depth first traversal1:" << endl;
 	g.depthFirstTraverse("Go camping", my_visit);
+
+	g.insertVertex("tent");
+	g.insertConnection("In a tent", "tent");
+	g.insertVertex("tent_child");
+	g.insertConnection("tent", "tent_child");
+	g.insertVertex("tent_child_child");
+	g.insertConnection("tent_child", "tent_child_child");
+
+	cout << endl << endl << endl << "Display(): " << endl;
+	g.display();
+
+
+	cout << endl << "Depth first traversal2:" << endl;
+	g.depthFirstTraverse("Go camping", my_visit);
+
 	return 0;
 }

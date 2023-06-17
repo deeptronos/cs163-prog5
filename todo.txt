@@ -5,4 +5,7 @@ Next time, test implementation using main.cc and work out SIGABRT occurring with
 
 
 
-// TODO: NEXT TIME: finish implementation!
+// TODO
+ // TODO further test testing interface;
+
+// TODO graph_depthFirstTraverse doesn't fully traverse sometimes?
