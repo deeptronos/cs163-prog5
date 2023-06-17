@@ -29,21 +29,24 @@ my_graph::my_graph() {
 
 my_graph::~my_graph(){ // TODO will this destroy strings pointed to by vertex's data?
 	if(adjacency_list){ // TODO complete?
-		for(auto v : *adjacency_list){
-			delete v.data;
-			node * node_ptr = v.head;
 
+		for(int i = 0; i < adjacency_list->size(); ++i){
+			delete adjacency_list->at(i).data;
+
+			node * node_ptr = adjacency_list->at(i).head;
 			if(node_ptr){
 				node * next = node_ptr;
 
-				while(v.head){
-					node_ptr = v.head -> next;
-					delete v.head;
-					v.head = node_ptr;
+				while(adjacency_list->at(i).head){
+					node_ptr = adjacency_list->at(i).head -> next;
+					delete adjacency_list->at(i).head;
+					adjacency_list->at(i).head = node_ptr;
 				}
 			}
 		}
+
 	}
+	delete adjacency_list;
 }
 
 

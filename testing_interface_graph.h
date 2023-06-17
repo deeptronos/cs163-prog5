@@ -1,6 +1,10 @@
 #include "my_graph.h"
 
 
+// Interface file (.h) for an interface class to test my_graph class.
+	// Sole private data member is a reference to my_graph.
+	// Contains public
+
 // Provides an interface for testing the graph ADT.
 
 #ifndef CS163_PROG5_TESTING_INTERFACE_GRAPH_H
@@ -12,6 +16,8 @@ public:
 	testing_interface_graph();
 	~testing_interface_graph();
 
+	// Prompts user for for input to call my_graph methods.
+	// Returns true on any valid input, fale whe
 	bool prompt_user();
 
 
