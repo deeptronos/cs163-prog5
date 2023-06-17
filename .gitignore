@@ -30,3 +30,4 @@ main
 *.app
 main
 main.dSYM/Contents/Info.plist
+*.txt
