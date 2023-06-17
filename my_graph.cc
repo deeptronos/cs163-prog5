@@ -1,8 +1,11 @@
 
+// Implementations for my_graph Graph ADT class & structs vertex, node.
+
 // ----------------------
 // vertex Implementation:
 // ----------------------
 
+// Overload ostream output operator to display vertex v. Used in my_visit() example visit method in testing_interface_graph.cc.
 ostream &operator<<(ostream &os, const vertex &v) { // Used for my_visit example visit method
 	os << "  VERTEX: \"" << *(v.data) <<"\""<< endl;
 	return os;
@@ -20,15 +23,16 @@ ostream &operator<<(ostream &os, const vertex &v) { // Used for my_visit example
 #include "my_graph.h"
 
 
-
+// Allocates a new vector for adjacency_list
 my_graph::my_graph() {
 	adjacency_list = new vector<vertex>;
 }
 
 
 
-my_graph::~my_graph(){ // TODO will this destroy strings pointed to by vertex's data?
-	if(adjacency_list){ // TODO complete?
+// Deletes all vertex entries in adjacency_list, in addition to the node LLL at each vertex, then deletes adjacency_list.
+my_graph::~my_graph(){
+	if(adjacency_list){
 
 		for(int i = 0; i < adjacency_list->size(); ++i){
 			delete adjacency_list->at(i).data;
@@ -68,7 +72,7 @@ void my_graph::display() const {
 			if (node_ptr) {
 				cout << "  directed edges: " << endl;
 				while (node_ptr != nullptr) {
-					vertex * temp = &adjacency_list->at(node_ptr->to); // TODO double check this funky pointer business
+					vertex * temp = &adjacency_list->at(node_ptr->to);
 					cout << "    towards \"" << *temp->data << "\"" << endl;
 					node_ptr = node_ptr->next;
 				}
@@ -87,12 +91,12 @@ void my_graph::display() const {
 // If no such vertex is found, add a new vertex with data d_ to the adjacency_list vector.
 bool my_graph::insertVertex(vertex_data_t d_)throw(PreconditionViolatedException){
 	for(auto v : *adjacency_list){
-		if(*(v).data == d_){ // TODO double check pointer syntax...
+		if(*(v).data == d_){
 			throw PreconditionViolatedException("my_graph::insertVertex - a vertex with that data already exists.");
 		}
 	}
 	string * new_data = new string(d_);
-	vertex new_v = {new_data, NULL}; // TODO this may be trouble... is new_v.data getting initialized correctly?
+	vertex new_v = {new_data, NULL};
 	adjacency_list->push_back(new_v);
 
 	return true;
@@ -100,6 +104,7 @@ bool my_graph::insertVertex(vertex_data_t d_)throw(PreconditionViolatedException
 
 
 
+// Checks that source_ and target_ are valid vertices. If so, creates a new node pointing to target_,  sets it to be the new .head of vertex source_, and sets the previous subject of .head's pointer to be pointed to by the new node's next.
 bool my_graph::insertConnection(vertex_data_t source_, vertex_data_t target_) throw(ConnectionException){
 	if(adjacency_list->empty()) return false;
 
@@ -113,7 +118,7 @@ bool my_graph::insertConnection(vertex_data_t source_, vertex_data_t target_) th
 		return false;
 	}
 
-	if(source_index < 0 || target_index < 0) throw ConnectionException("my_graph::insertConnection was passed one or more vertices which don't exist in the graph - source_: " + source_ + +", target_: " + target_); // todo Necessary? only way getVertexFromData returns <0 is if adjacency_list->empty() is true...
+	if(source_index < 0 || target_index < 0) throw ConnectionException("my_graph::insertConnection was passed one or more vertices which don't exist in the graph - source_: " + source_ + +", target_: " + target_);
 	else{
 		// Check if connection already exists
 		node * node_ptr = adjacency_list->at(source_index).head;
@@ -133,11 +138,7 @@ bool my_graph::insertConnection(vertex_data_t source_, vertex_data_t target_) th
 }
 
 
-
-//vertex_data_t my_graph::getVertexDataByIndex(int index){
-//	return(*(&adjacency_list->at(index))->data);
-//}
-
+// Prepares for a depth-first traversal from vertex with data start - sets all vertices to be undiscovered, then calls recursive_DepthFirstTraverse on start.
 void my_graph::depthFirstTraverse(vertex_data_t start, void visit(vertex*)) { // Start a  DFT at the vertex with data == start
 	if(adjacency_list->empty()) return;
 
@@ -150,8 +151,8 @@ void my_graph::depthFirstTraverse(vertex_data_t start, void visit(vertex*)) { //
 		cout << e.what() << endl;
 		return;
 	}
-	adjacency_list->at(v_start).discovered = true;
-	recursive_DepthFirstTraverse(*(&adjacency_list->at(v_start)), visit); // TODO double check ptr syntax
+//	adjacency_list->at(v_start).discovered = true;
+	recursive_DepthFirstTraverse(*(&adjacency_list->at(v_start)), visit);
 }
 
 
@@ -159,6 +160,8 @@ void my_graph::depthFirstTraverse(vertex_data_t start, void visit(vertex*)) { //
 // ---------------
 // Private Methods
 // ---------------
+
+// Iterates through adjacency_list and sets all vertex's .discovered to false.
 void my_graph::setAllVerticesUndiscovered(){
 	if(adjacency_list->empty())return;
 
@@ -170,6 +173,7 @@ void my_graph::setAllVerticesUndiscovered(){
 
 
 
+// Iterates through adjacency_list and returns index at which a node with data target_ is found. Throws NotFoundException if nothing is found.
 int my_graph::getVertexIndexFromData(vertex_data_t &target_) throw(NotFoundException) {
 	if(adjacency_list->empty()) return -1;
 
@@ -186,14 +190,15 @@ int my_graph::getVertexIndexFromData(vertex_data_t &target_) throw(NotFoundExcep
 // Recursive Traversal Method
 // --------------------------
 
-void my_graph::recursive_DepthFirstTraverse(vertex &v_, void (*visit)(vertex *)) { // TODO is ptr syntax good here?
+// Sets v_ to be discovered, calls visit on v, then iterates through v's edge list and recurses on the vertex referenced at each node in the edge list LLL.
+void my_graph::recursive_DepthFirstTraverse(vertex &v_, void (*visit)(vertex *)) {
 	v_.discovered = true;
 	visit(&v_);
 
 	node * node_ptr = v_.head;
 	while(node_ptr){
 		if(!( (&adjacency_list -> at(node_ptr -> to)) -> discovered )){
-			recursive_DepthFirstTraverse(*(&adjacency_list -> at(node_ptr -> to)), visit); // TODO double check ptr syntax
+			recursive_DepthFirstTraverse(*(&adjacency_list -> at(node_ptr -> to)), visit);
 		}
 		node_ptr = node_ptr -> next;
 	}

@@ -1,6 +1,13 @@
 // Represents the full graph ADT
 	// Un-weighted, directed graph.
-		// Graph direction is represented by order of edge in edge_node.edge
+
+// Vertex and node struct are based on Lab 8 structs.
+	// Except: vertex has overloaded operator<< to use in an example visit() method.
+
+//my_graph class implements an adjacency list-based Graph ADT.
+	// Sole private data member is the adjacency list, a pointer to a vector of vertices.
+	// Four public methods to display the graph, add a vertex to it, add a directed edge to it, and to begin a recursive depth-first traversal.
+	// Three private methods to set all vertices to be undiscovered (for use in traversals), get the adjacency_list index of a vertex containing data target_, and to do a depth-first traversal recursively.
 
 #ifndef CS163_PROG5_MY_GRAPH_H
 #define CS163_PROG5_MY_GRAPH_H
@@ -12,15 +19,12 @@
 
 #include "my_exceptions.h"
 
-// TODO:
-	// TODO Can I use std::pair from <utility>?
-	//      If not, just use a vector and enforce its size = 2:P
 
 using vertex_data_t = std::string;
 using namespace std;
 
-struct vertex{ // TODO since my_graph's adjacency_list is a std::vector<vertex>, will resizing that & invoking the vertex copy constructor cause issues here?
-	vertex_data_t * data; // TODO Should this be a * or not?
+struct vertex{
+	vertex_data_t * data;
 
 	struct node * head;
 
@@ -34,8 +38,6 @@ struct node{
 	int to; //
 
 	node * next;
-
-	friend ostream&  operator<<(ostream& os, const vertex& v);
 };
 
 class my_graph {

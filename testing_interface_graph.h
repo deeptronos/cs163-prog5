@@ -1,9 +1,10 @@
 #include "my_graph.h"
 
 
-// Interface file (.h) for an interface class to test my_graph class.
+// Interface file (.h) for an interface class to test the graph ADT (my_graph class).
 	// Sole private data member is a reference to my_graph.
-	// Contains public
+	// Contains public constructor/destructor, and one method to prompt user for input.
+	// Contains private methods to call my_graph operations.
 
 // Provides an interface for testing the graph ADT.
 
@@ -17,7 +18,7 @@ public:
 	~testing_interface_graph();
 
 	// Prompts user for for input to call my_graph methods.
-	// Returns true on any valid input, fale whe
+	// Returns true on any input indicating my_graph methods, false when user indicates they want to quit the program.
 	bool prompt_user();
 
 
@@ -35,6 +36,6 @@ private:
 	my_graph * graph_;
 
 };
-#include "testing_interface_graph.cc" // TODO good practice? doesn't compile otherwise...
+#include "testing_interface_graph.cc"
 
 #endif //CS163_PROG5_TESTING_INTERFACE_GRAPH_H

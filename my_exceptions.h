@@ -1,3 +1,4 @@
+// Custom exceptions used to diagnose specific erros and provide important context.
 
 #ifndef SOURCE_MY_EXCEPTIONS_H
 #define SOURCE_MY_EXCEPTIONS_H
@@ -11,7 +12,6 @@ using namespace std;
 
 class TargetNotFoundException : public logic_error{
 public:
-//	TargetNotFoundException(const string& message = "") : exception("Target not found: " + (message.c_str())){}
 	TargetNotFoundException(const string& message = "") : logic_error("Target not found: " + (message)){}
 };
 
