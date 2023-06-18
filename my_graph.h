@@ -12,6 +12,7 @@
 #ifndef CS163_PROG5_MY_GRAPH_H
 #define CS163_PROG5_MY_GRAPH_H
 
+#include <iostream>
 #include <vector>
 #include <string>
 #include <utility>
@@ -85,6 +86,6 @@ private:
 
 };
 
-#include "my_graph.cc"
+//#include "my_graph.cc"
 
 #endif //CS163_PROG5_MY_GRAPH_H

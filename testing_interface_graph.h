@@ -30,12 +30,11 @@ private:
 	bool graph_display();
 	bool graph_insertVertex(vertex_data_t name_);
 	bool graph_insertConnection(vertex_data_t source_, vertex_data_t target);
-
-	void graph_depthFirstTraverse(vertex_data_t source, void visit(vertex*));
+	bool graph_depthFirstTraverse(vertex_data_t source, void visit(vertex*));
 
 	my_graph * graph_;
 
 };
-#include "testing_interface_graph.cc"
+//#include "testing_interface_graph.cc"
 
 #endif //CS163_PROG5_TESTING_INTERFACE_GRAPH_H

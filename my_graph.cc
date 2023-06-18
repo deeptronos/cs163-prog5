@@ -1,4 +1,5 @@
 
+#include "my_graph.h"
 // Implementations for my_graph Graph ADT class & structs vertex, node.
 
 // ----------------------
@@ -39,7 +40,7 @@ my_graph::~my_graph(){
 
 			node * node_ptr = adjacency_list->at(i).head;
 			if(node_ptr){
-				node * next = node_ptr;
+//				node * next = node_ptr;
 
 				while(adjacency_list->at(i).head){
 					node_ptr = adjacency_list->at(i).head -> next;
